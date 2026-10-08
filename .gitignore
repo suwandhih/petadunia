@@ -9,6 +9,11 @@
 #   - tidak perlu terlihat publik
 #
 # Kalau Bapak ingin ikut mengunggahnya, hapus dua baris di bawah.
+# Aplikasi ada di subfolder app/ (folder itu IKUT diunggah).
 # ============================================================
 /backups/
 /catat/
+
+# Berkas ZIP untuk tombol [Upload files] di GitHub — hanya salinan isi repo,
+# tidak perlu ikut disimpan di dalam repo (menghindari isi ganda).
+/unggah-ke-github.zip

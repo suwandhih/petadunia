@@ -351,21 +351,29 @@ berkas boleh saling memanggil seperti biasa, dan pengaturan **diingat**.
    - **Visibility:** **Public** *(wajib untuk akun gratis)*
    - Klik **Create repository**.
 3. Di halaman repo → klik **Add file** → **Upload files**.
-4. Buka folder **`C:\data\Peta dunia\app`** di komputer, lalu **seret seluruh
-   isinya** (`index.html` + folder `css` + folder `js`) ke jendela unggah.
-   ⚠️ Yang diseret **isi `app/`**, bukan foldernya. Folder `app` sendiri tidak
-   perlu dibuat di GitHub.
-5. Tulis catatan kecil di kotak **Commit message** (mis. `Peta Dunia`), lalu
-   klik **Commit changes**.
-6. Buka **Settings** repo → menu kiri **Pages**.
+4. **Seret berkas ZIP yang sudah saya siapkan** —
+   **`C:\data\Peta dunia\unggah-ke-github.zip`** — ke jendela unggah GitHub,
+   lalu klik **Commit changes**.
+   GitHub **membuka ZIP-nya sendiri** menjadi berkas-berkas biasa, jadi Bapak
+   **tidak perlu** menyiapkan atau menyeret berkas satu per satu.
+   ⚠️ **Jangan** mengunggah folder `backups/` dan `catat/` (besar & tidak
+   dipakai aplikasi).
+   > 📦 Isi ZIP sudah diperiksa: 21 berkas — aplikasi (`app/index.html` +
+   > `app/css/` + `app/js/`) dan enam dokumen proyek. **Tidak ada kunci API** di
+   > dalamnya (kunci Bapak tetap hanya di peramban).
+5. Buka **Settings** repo → menu kiri **Pages**.
    - **Source:** *Deploy from a branch*
    - **Branch:** **`main`** · folder **`/ (root)`** → klik **Save**.
-7. Tunggu **±1–2 menit**, lalu muat ulang halaman Settings → Pages. Alamat
-   aplikasinya muncul, bentuknya:
+6. Tunggu **±1–2 menit**, lalu muat ulang halaman Settings → Pages. Alamat
+   aplikasinya muncul. Karena aplikasi ada di subfolder `app`, alamatnya:
 
    ```
-   https://<nama-akun>.github.io/petadunia/
+   https://<nama-akun>.github.io/petadunia/app/index.html
    ```
+
+   > 🔎 **Cara memastikan benar:** alamat itu harus **langsung menampilkan**
+   > globe + panel **KATEGORI**. Kalau yang muncul hanya daftar berkas
+   > (README), berarti `app/index.html` belum ikut di alamatnya.
 
 ### 7.3 Memakai di HP
 

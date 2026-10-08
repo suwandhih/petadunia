@@ -31,14 +31,27 @@ perlu versi satu berkas, dan **kunci AirLabs/pengaturan tidak pernah hilang**.
 Cukup **satu tautan** untuk PC **dan** HP, tanpa mengirim berkas.
 
 Cara memasangnya ditulis lengkap di **`panduan.md` bagian 7** (bahasa biasa).
-Ringkasnya: buat repo **`petadunia`** (Public) → unggah **isi folder `app/`** →
-Settings → Pages → branch `main`, folder `/ (root)` → tautan jadi
-`https://<nama-akun>.github.io/petadunia/`.
+Ringkasnya: buat repo **`petadunia`** (Public) → unggah berkas
+**`unggah-ke-github.zip`** lewat *Add file → Upload files* (GitHub membuka
+ZIP-nya sendiri) → Settings → Pages → branch `main`, folder `/ (root)` → tautan
+jadi **`https://<nama-akun>.github.io/petadunia/app/index.html`**.
 
-> ⚠️ **Belum ada kode yang diubah** untuk butir ini — ini baru **keputusan cara
-> memasang**. Yang belum dibuat (menunggu perintah Bapak): versi "satu berkas"
-> sebagai **jalan cadangan** bila internet mati, dan perbaikan ukuran tampilan HP
-> (`100vh` → `dvh`, tombol `⋯` dari 20 px jadi ±44 px).
+> **Sudah dikerjakan untuk butir ini (8 Okt 2026):** repositori Git disiapkan di
+> **`C:\data\Peta dunia`** (`git init -b main`, commit awal `e964389`, 21 berkas
+> = 6 dokumen + aplikasi di `app/`) · berkas **`.gitignore`** (agar `backups/`
+> 104 MB & `catat/` 79 MB tidak ikut terunggah; keduanya **tetap utuh** di
+> komputer) · berkas **`.nojekyll`** (agar GitHub tidak memproses berkas dengan
+> Jekyll) · **`unggah-ke-github.zip`** (355 KB) untuk tombol *Upload files* ·
+> backup sebelum git: `backups\github-20261008-1035\`.
+> Diperiksa juga: alat login Git (**Git Credential Manager**) tersedia, jadi
+> `git push` nanti akan meminta izin masuk lewat jendela peramban — **tidak perlu
+> membuat kunci manual**.
+
+> ⚠️ **Belum ada kode aplikasi yang diubah** untuk butir ini — halaman dibiarkan
+> apa adanya supaya bisa disamakan dengan keadaan Git. Yang belum dibuat (menunggu
+> perintah Bapak): versi "satu berkas" sebagai **jalan cadangan** bila internet
+> mati, dan perbaikan ukuran tampilan HP (`100vh` → `dvh`, tombol `⋯` dari 20 px
+> jadi ±44 px).
 
 **Catatan:** `rencanakerja.md` K20 (a–d) sudah dicatat; jawaban konsep Android
 disimpan di `prompt.md` bagian 6.

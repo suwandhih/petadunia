@@ -43,6 +43,7 @@ Peta Dunia (app/)
 │   └── maplibre-gl.css     → gaya bawaan MapLibre
 └── js/
     ├── inti.js             → peta, kanvas animasi, panel kategori, panel info, jam
+    ├── cari.js             → 🔍 cari lokasi (bukan kategori; tidak muncul di panel)
     ├── lapisan/            → SATU BERKAS = SATU KATEGORI
     │   ├── alat.js         → alat bantu gambar & pengambil data
     │   ├── gempa.js        → 🌊 Gempa Bumi
@@ -52,6 +53,13 @@ Peta Dunia (app/)
     └── lib/
         └── maplibre-gl.js  → disimpan LOKAL (tidak ambil dari internet)
 ```
+
+⚠️ **Urutan pemuatan berkas di `index.html` tidak boleh diubah sembarangan:**
+`inti.js` → `alat.js` → `cari.js` → berkas kategori. Berkas yang mengambil
+`PD.alat` **saat dimuat** akan **bisu total tanpa pesan** bila dimuat lebih dulu
+(kejadian nyata 8 Okt 2026: `cari.js` dipasang sebelum `alat.js` → kotak cari
+tidak bereaksi sama sekali). Sebagai pengaman, `cari.js` mengambil `PD.alat`
+**saat dipakai**, bukan saat dimuat.
 
 ### 1.1 Cara kerja inti (`js/inti.js`)
 
@@ -96,7 +104,8 @@ PD.daftar({
 | `label(ctx, x, y, teks, warna, ukuran)` | Label kecil berisi teks |
 | `panas(nilai)` | Warna menurut nilai 0..1 (biru → merah) |
 | `bidik(daftar, x, y, toleransi)` | Mencari titik terdekat dari posisi klik |
-| `ambil(url, opsi)` | Mengambil data JSON dengan penanganan galat |
+| `ambil(url, opsi)` | Mengambil data JSON dengan penanganan galat (+ batas waktu 20 detik) |
+| `ambilXml(url, opsi)` | Mengambil berkas **XML** resmi; **memeriksa jenis isi** lebih dulu (menolak halaman galat) |
 
 > ℹ️ Alat gambar **pesawat, kapal, kereta** sudah disiapkan — tinggal dipakai saat
 > kategori penerbangan / kapal / kereta dikerjakan.
@@ -112,6 +121,11 @@ PD.daftar({
 | `PD.waktu(iso)` / `PD.sejak(iso)` | Jam WIB / "3 jam lalu" |
 | `PD.ringkas(id, teks, tambahan, warna)` | Ringkasan status di kaki panel kategori |
 | `PD.tampilkanInfo(html)` / `PD.tutupInfo()` | Buka / tutup panel informasi |
+| `PD.cari.pasang()` | Memasang kotak 🔍 di bilah atas |
+| `PD.cari.tujuan` · `PD.cari.titik()` | Lokasi yang sedang dicari (atau `null`) |
+| `PD.cari.tambahanKartu(id, baris)` | Kategori lain menyisipkan baris ke kartu lokasi (dipakai 🌡️ Suhu) |
+| `PD.cari.gambar(ctx)` | Menggambar tanda 📍 — dipanggil inti pada tiap bingkai |
+| kejadian `pd:cari` | Disiarkan tiap lokasi berubah, supaya kategori yang berminat menghitung ulang |
 
 ---
 
@@ -127,8 +141,14 @@ PD.daftar({
 | 💨 **Angin** | `angin.js` | **Open-Meteo** forecast · cadangan `historical-forecast-api.open-meteo.com` | Seluruh dunia | 10 menit |
 | 🌧️ **Hujan** | `hujan.js` | **RainViewer** radar (ubin + `weather-maps.json`) | Seluruh dunia | 30 menit |
 | ✈️ **Penerbangan** | `penerbangan.js` | **AirLabs** `v9/flights` (perlu kunci gratis) | Seluruh dunia | 30 menit |
-| 🌡️ **Suhu Permukaan** | `suhu.js` | **NASA GIBS WMTS** `MODIS_Terra_Land_Surface_Temp_Day` | Seluruh dunia | 15 menit |
+| 🌡️ **Suhu Permukaan** | `suhu.js` | **NASA GIBS WMTS** `MODIS_Terra_Land_Surface_Temp_Day` + tabel warna resmi `colormaps/v1.3/MODIS_Land_Surface_Temp.xml` | Seluruh dunia | 15 menit |
 | ☁️ **Awan** | `awan.js` | **NASA GIBS WMTS** — foto asli `MODIS_Terra_CorrectedReflectance_TrueColor` dengan warna alami | Seluruh dunia | 15 menit |
+
+Alat bersama (bukan kategori, tidak muncul di panel):
+
+| Berkas | Guna | Sumber |
+|--------|------|--------|
+| `js/cari.js` | **cari lokasi** (kotak 🔍 di bilah atas) | **Open-Meteo Geocoding** (CORS `*`), cadangan **Nominatim OSM** (CORS `*`) |
 
 Catatan tiap kategori:
 
@@ -185,6 +205,27 @@ Catatan tiap kategori:
   Nilainya disimpan di `localStorage` (`pd_awan_opasitas`).
 - Persentase tutupan awan tidak ditampilkan karena lapisan yang dipakai adalah
   foto, bukan data angka persen.
+
+#### 🌡️ Suhu: angka derajat (°C) — cara kerjanya
+
+Suhu ditampilkan **dua cara**: peta warna (ubin NASA) + **angka derajat Celsius**.
+
+| Hal | Keterangan |
+|-----|------------|
+| Sumber angka | **tabel warna resmi NASA** `gibs.earthdata.nasa.gov/colormaps/v1.3/MODIS_Land_Surface_Temp.xml` — 253 tingkat, **satuan Kelvin**, 200–350 K, CORS `*` |
+| Bukti kecocokan | palet ubin NASA **253 dari 253 indeks sama persis** dengan tabel resmi (diukur 8 Okt 2026 dari banyak ubin; aturan I19) |
+| Rumus | **°C = Kelvin − 273,15** |
+| Yang **tidak** dipakai | **legenda PNG** NASA (`legends/MODIS_Land_Surface_Temp_H.png`) — paletnya **berbeda** (0% cocok). Juga GIBS `GetFeatureInfo` — **dimatikan** NASA (*"WMS request not enabled"*) |
+| Titik yang dibaca | piksel **sekitar** lokasi (jari-jari 5 px ≈ ±12 km, diperlebar bila tepi daratan) — bukan rata-rata seluruh petak (±300 km bisa memuat dataran + pegunungan) |
+| Celah citra | MODIS memotret **dalam lintasan** ⇒ satu tanggal bisa berlubang (terukur pada petak Jawa: hari ini 1.615 piksel · 7 Okt 15.044 · 5 Okt **0** · 4 Okt 20.141). Aplikasi mencoba **tanggal mundur sampai 10 hari** dan menuliskan tanggal citra yang dipakai |
+| Piksel di luar tabel | **dilewati**, bukan ditebak |
+| Di atas laut | **tidak** diberi angka — ubin laut tembus pandang |
+| Titik tetap kosong | dituliskan **kedua kemungkinan** (laut / celah citra) — tidak ditebak, sebab ubin NASA tidak memberi tanda |
+| Angka wajar diuji | Jakarta 30,5 · Bandung (714 m) 25,5 · Sahara 29,2 · Reykjavík 5,1 — cocok dengan hitungan di luar aplikasi |
+
+**Cara menampilkannya:** buka kotak **🔍 cari lokasi** → pilih tempat → kartu
+lokasi memuat baris **Suhu di sini** dan pita skala memasang **garis putih** di
+kedudukan suhu itu.
 
 ### 2.2 Belum dikerjakan (2 kategori)
 
@@ -397,6 +438,14 @@ memakainya, jangan menulis MapLibre langsung.
    inti **mematikan kategori** dengan pesan menyesatkan. Biarkan kategori tetap
    menyala, tulis sebabnya dengan bahasa biasa lewat `PD.setStatus()` /
    `PD.ringkas()`, dan coba lagi pada penjadwalan berikutnya (aturan F20/I16).
+10. **Penyeragaman `fetch` — periksa JENIS ISI, jangan hanya kode jawaban.**
+   NASA GIBS bisa menjawab `200` dengan isi **XML galat** (kebakaran) atau
+   **ubin berpalet yang tidak berisi data** untuk wilayah tertentu (suhu).
+   Untuk data gambar, periksa `content-type` berawalan `image/`; untuk data
+   nilai, periksa warna pikselnya **ada di tabel resmi**. Jangan lupa juga:
+   `PD.angka()` memakai format Indonesia (**koma** desimal) ⇒ **jangan** pakai
+   untuk menyusun URL — pakai `toFixed()`. Kesalahan ini nyata terjadi
+   (8 Okt 2026) dan membuat Open-Meteo membalas HTTP 400.
 
 ---
 

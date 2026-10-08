@@ -13,6 +13,13 @@ Aplikasi **sudah jalan**. Yang sudah bisa dipakai: **8 kategori** —
 
 Masih ada **2 kategori** yang belum dibuat: 🚢 Kapal laut · 🚆 Kereta.
 
+> 🔍 **Ada kotak Cari lokasi** di pojok kanan atas (mulai 8 Okt 2026). Ketik nama
+> tempat → peta pindah ke sana, dan bila kategori 🌡️ Suhu menyala, **derajat
+> Celsius di lokasi itu ikut tampil**. Cara pakainya di bagian **2c**.
+>
+> 🌡️ **Suhu Permukaan sekarang ada angkanya** (dulu hanya warna). Skalanya
+> **−73 °C** (biru) sampai **127 °C** (merah).
+
 > ✈️ **Penerbangan perlu kunci gratis dari AirLabs** — cara mengambil & menempelkannya
 > ada di bagian 5b di bawah. Tanpa kunci, kategori Penerbangan tidak bisa menampilkan
 > pesawat (dan aplikasi akan bilang terus terang, bukan mengarang).
@@ -56,9 +63,42 @@ Masih ada **2 kategori** yang belum dibuat: 🚢 Kapal laut · 🚆 Kereta.
 
 | Tombol | Gunanya |
 |--------|---------|
+| 🔍 **Cari lokasi** | Mengetik nama tempat → peta pindah ke sana (lihat bagian 2c) |
 | 🌐 **Globe** | Ganti tampilan **bola dunia** ↔ **datar** |
 | 🛰️ **Satelit** | Ganti tampilan **citra satelit** ↔ **peta jalan** |
 | ☰ | Buka/tutup panel kategori (khusus di HP) |
+
+---
+
+### 2c. 🔍 CARI LOKASI — DAN MELIHAT SUHU DI SANA
+
+1. Klik **kotak cari** di pojok kanan atas, ketik nama tempat (minimal 2 huruf),
+   misalnya `Bandung`.
+2. Tunggu sebentar → muncul **daftar tempat**. Pilih yang dimaksud.
+3. Peta **bergerak sendiri** ke lokasi itu, dan sebuah **tanda 📍** dipasang
+   di sana beserta namanya.
+4. Muncul **kartu keterangan**: wilayah, negara, koordinat, dan tinggi tempat.
+
+**Ingin tahu suhunya?** Nyalakan dulu kategori 🌡️ **Suhu Permukaan**
+(lihat bagian 3), lalu cari lokasinya. Kartu lokasi akan menambah baris:
+
+> **Suhu di sini 25,5 °C** — Tanggal citra 2026-10-07 — Luas hitungan ±12 km
+> — Rentang satu petak 10,0 s/d 35,2 °C
+
+Di sudut kiri bawah juga muncul **pita warna** (skala suhu) dengan **garis putih**
+menunjuk berapa derajat di lokasi yang dicari.
+
+> ℹ️ **Angkanya suhu permukaan dari satelit**, bukan suhu udara harian seperti
+> di prakiraan cuaca. Karena itu angkanya bisa lebih tinggi (mis. gurun 29 °C).
+> Ini wajar.
+>
+> ℹ️ Angka di **atas laut tidak ada** — citra NASA untuk suhu memang hanya
+> berisi daratan. Bila sebuah titik tetap kosong, aplikasi akan bilang apa
+> adanya, **tidak menebak**.
+>
+> ℹ️ Tanggal citra bisa **kemarin atau beberapa hari lalu**. Sebabnya satelit
+> memotret bumi dalam **lintasan**, jadi citra hari ini bisa berlubang. Aplikasi
+> otomatis mencari tanggal terdekat yang menutup lokasi itu.
 
 ---
 
@@ -207,7 +247,7 @@ Saat kategori ✈️ Penerbangan dinyalakan, panelnya berisi:
 | 💨 **Angin** | **Partikel mengalir** mengikuti arah angin. Biru = lemah, hijau/kuning = sedang, jingga/merah = kencang. **Panah** menunjukkan arah tiupan. Bila jatah harian Open-Meteo habis, aplikasi otomatis memakai **server cadangan** dan ringkasannya berkata *"sedang memakai server cadangan"* |
 | ✈️ **Penerbangan** | Bentuk **pesawat kecil yang berputar mengikuti arah terbang**. Warna **kuning = terbang rendah (di bawah 3.000 m)**, **biru muda = terbang tinggi**. Yang sedang Bapak cari **berdenyut merah muda** + ada tulisan nomor & rutenya. **Klik** pesawat untuk melihat rute, maskapai, jenis, ketinggian, kecepatan, dan arah |
 | 🌧️ **Hujan** | Lapisan warna di atas peta yang **bergerak seperti animasi cuaca** — maju lalu mundur, menunjukkan hujan 2 jam terakhir. **Warna biru = hujan ringan, hijau/kuning = sedang, merah = lebat.** Lalu-lintas warna: biru → hijau → kuning → jingga → merah |
-| 🌡️ **Suhu Permukaan** | Warna **suhu permukaan daratan**, bukan suhu udara. Biru = dingin (kutub/gunung tinggi), kuning = hangat, merah = panas. ⚠️ **Laut tampak kosong** — itu benar, yang diukur hanya permukaan daratan. ⚠️ NASA **tidak menyediakan skala angkanya**, jadi aplikasi **tidak menuliskan derajat** — hanya warnanya. Itu lebih jujur daripada menebak |
+| 🌡️ **Suhu Permukaan** | Warna **suhu permukaan daratan**, bukan suhu udara. Biru = dingin (kutub/gunung tinggi), kuning = hangat, merah = panas. ✅ **Sekarang ADA angkanya**: pita skala menunjukkan **−73 °C sampai 127 °C**, dan bila Bapak mencari lokasi (kotak 🔍) sementara kategori ini menyala, **derajat Celsius di lokasi itu ikut tampil**. Angkanya dibaca dari **tabel warna resmi NASA** (terbukti cocok 253 dari 253 tingkat) — bukan tebakan. ⚠️ **Laut tampak kosong** — itu benar, yang diukur hanya permukaan daratan, jadi angkanya pun tidak diberikan di atas laut |
 | ☁️ **Awan** | Foto satelit asli dengan warna alami. Awan tampak putih (salju & es juga putih); celah gelap di antara lintasan satelit dapat terlihat. Tidak ada peta awan berwarna merah |
 | ☁️ **Awan — kepekatan** | Bisa diatur: **Tipis / Sedang / Tebal** (tombol `⋯` pada baris ☁️ Awan). Pilihan kepekatan diingat aplikasi |
 

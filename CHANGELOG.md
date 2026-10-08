@@ -5,6 +5,115 @@
 
 ---
 
+## 8 Oktober 2026 — 🔍 FITUR BARU: CARI LOKASI
+
+Bapak meminta tambahan: **fitur cari lokasi**.
+
+### Yang sekarang bisa dilakukan
+
+Ketik nama tempat di kotak **🔍 Cari lokasi** (pojok kanan atas) — daftar
+tempat muncul, pilih satu, maka:
+
+- **peta bergerak sendiri** ke lokasi itu,
+- sebuah **tanda 📍** dipasang di sana beserta namanya,
+- muncul **kartu keterangan**: wilayah, negara, koordinat, dan tinggi tempat,
+- **kotak 🔍** bisa dipakai kapan saja, tidak perlu kategori menyala.
+
+Contoh: mengetik *Bandung* → muncul 8 tempat bernama Bandung/Bandungan,
+dipilih **Kota Bandung** → peta pindah ke Jawa Barat, kartu menulis
+*Kotamadya Bandung, Jawa Barat, Indonesia · 714 m*.
+
+### Datanya dari mana (tidak dikarang)
+
+| Diperiksa | Hasil |
+|-----------|-------|
+| Sumber pencarian: **Open-Meteo Geocoding** | ✅ diizinkan (CORS `*`), tanpa kunci |
+| Sumber cadangan: **Nominatim OpenStreetMap** | ✅ juga diizinkan (dipakai bila yang utama sedang tak bisa) |
+| Yang gagal: peta tutupan awan berpalet merah | ❌ **sudah dihapus** sejak perbaikan Awan (7 Okt) |
+
+---
+
+## 8 Oktober 2026 — 🌡️ SUHU PERMUKAAN: SEKARANG ADA ANGKANYA (°C)
+
+Keluhan Bapak: *"walau sudah ada info biru = dingin, merah = panas — berapa
+derajat C-nya?"*
+
+### Jawabannya: sekarang angkanya ada
+
+Pita skala warna (legenda) sekarang punya **angka derajat**, dari **−73 °C**
+(biru) sampai **127 °C** (merah). Dan bila Bapak mencari sebuah lokasi
+sementara kategori 🌡️ Suhu menyala, **kartu lokasi menampilkan suhunya**,
+misalnya:
+
+> **Suhu di sini 25,5 °C** · Tanggal citra 2026-10-07 · Luas hitungan ±12 km ·
+> Rentang satu petak 10,0 s/d 35,2 °C
+
+### Kenapa baru sekarang? Angkanya harus dari sumber resmi
+
+Aturan proyek melarang mengarang angka. Scan warna NASA ternyata **tidak
+tersedia** untuk dibaca dari gambar legenda, dan NASA mematikan fasilitas
+pembaca nilai per titik (*"WMS request not enabled"*). Jadi angkanya dicari
+sampai dapat dari sumber resmi:
+
+| Yang dicari | Hasil |
+|-------------|-------|
+| Tabel warna resmi NASA | ✅ **ketemu**: `colormaps/v1.3/MODIS_Land_Surface_Temp.xml` — 253 tingkat, **satuan Kelvin**, 200–350 K |
+| Warna ubin NASA sama dengan tabel itu? | ✅ **sama persis, 253 dari 253 indeks** (diukur dari banyak ubin di seluruh dunia) |
+| Gambar legenda NASA (PNG) | ❌ paletnya **berbeda** (0% cocok) → **tidak** dipakai |
+
+**Rumusnya sederhana:** °C = (nilai Kelvin pada tabel warna resmi untuk warna
+ubin itu) − 273,15.
+
+### Diuji kewajarannya (bukan hanya "kelihatan jalan")
+
+| Tempat | Hasil aplikasi | Wajar? |
+|--------|----------------|--------|
+| Jakarta | **30,5 °C** | ✅ wajar untuk kota pantai tropis |
+| Bandung (714 m) | **25,5 °C** | ✅ wajar: lebih sejuk karena tinggi tempat |
+| Gurun Sahara | 29,2 °C | ✅ wajar |
+| Reykjavík (Islandia) | 5,1 °C | ✅ wajar |
+| Surabaya | 33,7 °C | ✅ wajar |
+
+Angka Jakarta & Bandung **juga dihitung ulang di luar aplikasi** dengan cara
+yang sama, hasilnya **sama persis** — jadi angka yang tampil bisa dipercaya.
+
+### Yang diungkapkan terus terang (bukan disembunyikan)
+
+1. **MODIS Terra memotret bumi dalam lintasan**, jadi citra satu tanggal bisa
+   **berlubang**. Terukur pada satu petak di Jawa: hari ini 1.615 piksel ·
+   kemarin 15.044 · 5 hari lalu **0**. Aplikasi mencoba **tanggal mundur sampai
+   10 hari** dan menuliskan tanggal citra yang dipakai.
+2. **Angka di atas laut tidak diberikan** — citra ini memang hanya berisi daratan.
+3. Kalau sebuah titik tetap kosong, aplikasi **tidak menebak** apakah itu laut
+   atau celah citra; keduanya dituliskan sebagai kemungkinan.
+4. Angka itu **suhu sekitar titik** (±12 km) dari citra satelit siang, **bukan**
+   suhu udara harian yang biasa dilihat di prakiraan cuaca. Angka sahara/panas
+   memang lebih tinggi dari suhu udara, itu wajar untuk suhu permukaan.
+
+### Perbaikan tampilan HP yang ikut dikerjakan
+
+- Di lebar layar sempit (288 px ke bawah), bilah atas **sebelumnya meluber** —
+  tombol ☰ terdorong keluar layar. Sudah diperbaiki (kotak cari bisa menyusut).
+- Di HP, **daftar hasil pencarian** sebelumnya terpotong di tepi layar. Sudah
+  dipaku ke tepi layar (tidak mungkin terpotong lagi).
+- Pita skala dinaikkan sedikit supaya **tidak tertimpa** tulisan keterangan peta.
+- Halaman boleh **dizum** (cubit dua jari) supaya teks bisa diperbesar Bapak.
+
+### Hasil uji (halaman hidup)
+
+| Uji | Hasil |
+|-----|-------|
+| Uji PC (1440×900) | ✅ 4 kategori serentak · Bandung **25,5 °C** · 0 galat aplikasi |
+| Uji HP (360/390/412 px) | ✅ kotak cari, daftar hasil, kartu, pita skala **semuanya di dalam layar** |
+| Tukar gaya peta 4× (🌐 ↔ 🛰️) | ✅ lapisan Suhu (0,78) & Awan (0,72) **selalu kembali terpasang** |
+| Cari tempat yang tidak ada | ✅ pesan jelas: *"Tidak ada tempat bernama …"* |
+| Titik di tengah laut | ✅ jujur menyebut tidak ada data, **tidak menampilkan angka palsu** |
+| Sisa uji di peramban | ✅ dibersihkan |
+
+Sudah dipasang ke halaman hidup: **https://suwandhih.github.io/petadunia/**
+
+---
+
 ## 8 Oktober 2026 — 🔥 KEBAKARAN HUTAN TIDAK BISA DIHIDUPKAN (SUDAH DIPERBAIKI)
 
 Bapak melaporkan: kategori **Kebakaran Hutan tidak bisa dihidupkan**.

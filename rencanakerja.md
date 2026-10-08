@@ -54,6 +54,29 @@
 > ⚠️ Legenda **PNG** ternyata berpalet **berbeda** (0% cocok) — jadi **XML
 > colormap** yang dipakai, bukan PNG legenda. Ini contoh nyata aturan I10/I19.
 
+> **Cara aplikasi menghitung °C (bisa dibangun ulang tanpa AI):**
+> 1. Unduh ubin `MODIS_Terra_Land_Surface_Temp_Day` (PNG berpalet) untuk petak
+>    yang memuat lokasi; bila petaknya kosong, coba **tanggal mundur** sampai
+>    10 hari (MODIS memotret dalam lintasan, jadi petak bisa berlubang —
+>    terukur 8 Okt 2026 pada petak Jawa: hari ini 1.615 piksel · 7 Okt 15.044 ·
+>    5 Okt **0** · 4 Okt 20.141).
+> 2. Baca warna piksel di **sekitar titik** (jari-jari 5 px ≈ ±12 km, diperlebar
+>    bila titiknya di tepi daratan) — bukan rata-rata seluruh petak, sebab satu
+>    petak ±300 km bisa memuat dataran dan pegunungan sekaligus.
+> 3. Cocokkan warna itu dengan tabel resmi
+>    `colormaps/v1.3/MODIS_Land_Surface_Temp.xml`; ambil titik tengah selang `value`.
+> 4. **°C = Kelvin − 273,15.**
+>
+> Piksel yang warnanya tidak ada di tabel (mis. petak tanpa data) **dilewati**,
+> bukan ditebak. Angka di atas laut **tidak diberikan**.
+>
+> **Yang TIDAK bisa dipastikan (dinyatakan terus terang):** apakah "titik tidak
+> berisi data" berarti **laut** atau **celah citra** — ubin NASA tidak memberi
+> tanda. Diuji 8 Okt 2026: kehadiran angka suhu dari Open-Meteo juga tidak bisa
+> dipakai pembeda (Maladewa — pulau karang — membalas 30,2 °C dengan tinggi 0 m,
+> sama seperti tengah Samudra Pasifik 24,3 °C). Karena itu aplikasi menuliskan
+> **kedua kemungkinan**, tidak menebak.
+
 > **K20-d — keputusan pemasangan (8 Okt 2026):** Bapak memilih **GitHub Pages**.
 > Sebabnya: lewat HTTPS masalah `file://` **hilang semua** — tidak perlu versi
 > "satu berkas", dan kunci AirLabs/pengaturan **tidak pernah hilang**.
@@ -164,6 +187,8 @@ sebelum menulis kode.
 | K17 f | Penerbangan (AirLabs) + kotak cari penerbangan & rute + perbaikan 2 bug tersembunyi + **uji kunci sungguhan (berhasil)** | 7 Okt 2026 |
 | K17 j | Uji PC (8 kategori serentak) + uji HP (layar sempit) | 7 Okt 2026 |
 | K19 | Awan realistis — hilangkan peta awan berpalet merah, gunakan foto satelit asli sebagai satu-satunya tampilan | 8 Okt 2026 |
+| **K22** | **Cari lokasi** — kotak 🔍 di bilah atas (Open-Meteo Geocoding, CORS `*`), daftar hasil, peta bergerak ke lokasi, tanda 📍 digambar di kanvas (disembunyikan di balik globe, aturan F9), kartu keterangan lokasi | 8 Okt 2026 |
+| **K23** | **Suhu permukaan dalam derajat °C** — angka dibaca dari warna ubin resmi NASA memakai **tabel warna resmi NASA** yang sama (terbukti cocok 253/253 tingkat), + **pita skala** warna ⇄ derajat; tanggal citra dicoba mundur karena MODIS berlubang | 8 Okt 2026 |
 | K21 | **Kebakaran Hutan tidak bisa dihidupkan** — sebabnya NASA GIBS membalas HTTP 200 berisi **XML galat** (citra hari ini belum terbit); kini jenis isi diperiksa, tanggal dicoba mundur, dan kegagalan sementara tidak lagi mematikan kategori | 8 Okt 2026 |
 | — | **Perbaikan pasca-keluhan *"AirLabs: Unknown api_key"*** (kunci palsu sisa uji dibersihkan · validasi bentuk kunci · pesan galat jelas · tombol Hapus kunci · bug angka 0 karangan · kartu = ringkasan) | 7 Okt 2026 |
 | — | **Tombol `⋯`** pada tiap kategori (kartu pengaturan selalu bisa dibuka, termasuk di HP) | 7 Okt 2026 |

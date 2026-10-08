@@ -1,0 +1,14 @@
+# ============================================================
+# Peta Dunia — berkas yang TIDAK perlu diunggah ke GitHub
+# ------------------------------------------------------------
+# Aplikasi ini dilayani sebagai halaman web dari AKAR repo
+# (index.html + css/ + js/ ada di akar). Karena itu cadangan dan
+# arsip lama tidak ikut diunggah:
+#   - ukurannya besar (backups ±104 MB, catat ±79 MB)
+#   - tidak dipakai aplikasi
+#   - tidak perlu terlihat publik
+#
+# Kalau Bapak ingin ikut mengunggahnya, hapus dua baris di bawah.
+# ============================================================
+/backups/
+/catat/

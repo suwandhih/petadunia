@@ -53,6 +53,36 @@ jadi **`https://<nama-akun>.github.io/petadunia/app/index.html`**.
 > mati, dan perbaikan ukuran tampilan HP (`100vh` → `dvh`, tombol `⋯` dari 20 px
 > jadi ±44 px).
 
+> ✅ **SUDAH TERPASANG & DIUJI (8 Okt 2026, ±12 menit).** Halaman hidup di
+> **`https://suwandhih.github.io/petadunia/`**.
+>
+> | Uji | Hasil |
+> |-----|-------|
+> | Semua berkas aplikasi (13) | ✅ **HTTP 200** |
+> | Data benar-benar masuk | ✅ **127 gempa tampak dari 311** |
+> | Lapisan Awan (foto realistis) | ✅ terpasang |
+> | Galat halaman | ✅ **0** |
+>
+> **Cara memasangnya (penting untuk diingat):** GitHub **hanya mau menerbitkan
+> halaman dari branch kalau setelannya sudah pernah dinyalakan**, dan **GitHub
+> Actions tidak boleh menyalakannya** (gagal dengan pesan *"Create Pages site
+> failed. Error: Resource not accessible by integration"* — percobaan itu sudah
+> dihapus). Yang **berhasil**: cabang **`gh-pages`** berisi `index.html` + `app/`
+> → GitHub menyalakan Pages sendiri. Jadi:
+>
+> - cabang **`main`** = seluruh repo (aplikasi + dokumen) = sumber pembaruan;
+> - cabang **`gh-pages`** = halaman yang dilayani ke pengunjung.
+>
+> **Kalau aplikasi diperbarui**, halaman **tidak berubah sendiri**; harus disalin:
+> `git checkout gh-pages` → `git checkout main -- index.html app` →
+> `git commit -am "perbarui halaman"` → `git push origin gh-pages` →
+> `git checkout main`. (Sudah diuji: tanpa perubahan, hasilnya memang tidak ada
+> perubahan — aman dijalankan kapan saja.)
+>
+> Backup tambahan sebelum bekerja di cabang: `backups\aman-gh-pages-20261008-1145\`.
+> Berkas `unggah-ke-github.zip` sudah dihapus (tidak dipakai lagi — repo sudah
+> terunggah).
+
 **Catatan:** `rencanakerja.md` K20 (a–d) sudah dicatat; jawaban konsep Android
 disimpan di `prompt.md` bagian 6.
 

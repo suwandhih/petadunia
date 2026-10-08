@@ -14,8 +14,10 @@
 | **K20** | **Jalan di browser Android (Chrome)** | | | |
 | K20 | a. Selidiki kendala nyata (lokasi berkas, penyimpanan, pekerja web, CORS, tampilan sentuh) | ✅ | ✅ | 8 Okt 2026 |
 | K20 | b. **Pertanyaan konsep:** bagaimana data JSON bisa jalan di Chrome Android (mempelajari ANodes) | ✅ | ✅ | 8 Okt 2026 |
-| K20 | c. Perbaikan (menunggu keputusan Bapak — belum ada yang dikerjakan) | ⏸️ | ⏸️ | — |
-| K20 | d. **Jalur pemasangan dipilih Bapak:** **GitHub Pages** (bukan Google Drive manual) — 8 Okt 2026 | ✅ | ✅ | 8 Okt 2026 |
+| K20 | c. Perbaikan tampilan HP (`100vh` → `dvh`, tombol `⋯` ±44 px) — **belum dikerjakan** | ⏸️ | ⏸️ | — |
+| K20 | d. Jalur pemasangan: **GitHub Pages** (dipilih Bapak) | ✅ | ✅ | 8 Okt 2026 |
+| K20 | e. **Terpasang & diuji hidup:** `https://suwandhih.github.io/petadunia/` | ✅ | ✅ | 8 Okt 2026 |
+| K20 | f. Cadangan versi **satu berkas** (untuk saat internet mati) — **belum dikerjakan** | ⏸️ | ⏸️ | — |
 
 > **K20-d — keputusan pemasangan (8 Okt 2026):** Bapak memilih **GitHub Pages**.
 > Sebabnya: lewat HTTPS masalah `file://` **hilang semua** — tidak perlu versi

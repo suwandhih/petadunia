@@ -331,6 +331,16 @@ Bisa juga langsung tanya AI: *"papan"* — lalu AI beri ringkasan singkat.
 > tautan**, tanpa mengirim berkas dan tanpa server sendiri.
 > Perkiraan waktu: **±15 menit**, sekali saja.
 
+> ✅ **SUDAH TERPASANG (8 Okt 2026).** Tidak perlu mengerjakan ulang bagian ini.
+> Alamat aplikasinya:
+>
+> **`https://suwandhih.github.io/petadunia/`**
+>
+> Halaman sudah diuji dari sisi ini: semua berkas termuat (HTTP 200), data
+> nyata masuk (**127 gempa tampak dari 311**), lapisan Awan terpasang,
+> **0 galat**. Bagian 7.2–7.4 di bawah hanya **catatan cara** (kalau nanti
+> perlu dipasang ulang di akun lain).
+
 ### 7.1 Kenapa cara ini, bukan kirim berkas
 
 Kalau berkas dikirim ke HP lalu dibuka langsung (**file://**), dua hal ini terjadi:
@@ -342,6 +352,32 @@ Kalau berkas dikirim ke HP lalu dibuka langsung (**file://**), dua hal ini terja
 
 Dengan **GitHub** (lewat alamat `https://`), **kedua masalah itu hilang**:
 berkas boleh saling memanggil seperti biasa, dan pengaturan **diingat**.
+
+### 7.1b Keadaan yang SEKARANG berlaku (penting)
+
+Halaman yang hidup dilayani dari cabang **`gh-pages`** (cabang khusus berisi
+`index.html` + folder `app/`). Cabang **`main`** berisi seluruh repo (aplikasi +
+dokumen) dan dipakai sebagai **sumber pembaruan**.
+
+⚠️ **Sebabnya begini:** GitHub hanya mau menerbitkan halaman dari branch kalau
+setelannya sudah **pernah dinyalakan**. Percobaan menyalakannya lewat GitHub
+Actions **gagal** (pesannya: *"Create Pages site failed. Error: Resource not
+accessible by integration"*) — jadi sekali ini saja harus lewat cabang
+`gh-pages`, dan ternyata **langsung berhasil**.
+
+**Kalau nanti aplikasi diperbarui**, halaman **tidak ikut berubah sendiri** —
+harus disalin dulu ke cabang `gh-pages`:
+
+```
+git checkout gh-pages
+git checkout main -- index.html app
+git commit -am "perbarui halaman"
+git push origin gh-pages
+git checkout main
+```
+
+*(Perintah itu sudah diuji: kalau tidak ada yang berubah, hasilnya memang tidak
+ada perubahan — jadi aman dijalankan kapan saja.)*
 
 ### 7.2 Langkah membuat (di PC)
 

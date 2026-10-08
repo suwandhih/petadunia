@@ -505,11 +505,13 @@ C:\data\Peta dunia\        ← AKAR repostori Git
 
 | Butir | Keterangan |
 |-------|-----------|
-| Alamat aplikasi | `https://<nama-akun>.github.io/petadunia/app/index.html` |
-| Cara memasang | unggah `unggah-ke-github.zip` → *Add file → Upload files* (GitHub membuka ZIP sendiri) |
-| Cabang | `main` (repo kosong langsung dibuat dengan `git init -b main`) |
-| Login saat `git push` | memakai **Git Credential Manager** (sudah tersedia) → izin lewat jendela peramban |
-| Isi repo | 22 berkas: 14 aplikasi + 6 dokumen + `.gitignore` + `.nojekyll` |
+| Alamat aplikasi | **`https://suwandhih.github.io/petadunia/`** (sudah hidup & diuji 8 Okt 2026) |
+| Cabang `main` | seluruh repo: aplikasi (`app/`) + 6 dokumen — sumber pembaruan |
+| Cabang `gh-pages` | halaman yang dilayani ke pengunjung: `index.html` + `app/` |
+| Kenapa dua cabang | GitHub **hanya mau menerbitkan halaman dari branch bila setelannya pernah dinyalakan**; Actions **tidak boleh** menyalakannya (`Resource not accessible by integration`). `gh-pages` berhasil. |
+| Memperbarui halaman | `git checkout gh-pages` → `git checkout main -- index.html app` → `git commit -am "perbarui halaman"` → `git push origin gh-pages` → `git checkout main` |
+| Login saat `git push` | memakai **Git Credential Manager** (kredensial sudah tersimpan — tidak perlu login lagi) |
+| Isi repo | `main`: 23 berkas; `gh-pages`: 17 berkas (aplikasi saja) |
 | Kunci API | **tidak ada** di dalam repo — sisa hanya contoh karangan `a1b2c3d4-…` |
 
 ⚠️ **Jangan** menghapus dua baris `backups/` dan `catat/` dari `.gitignore`

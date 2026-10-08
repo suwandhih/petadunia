@@ -5,6 +5,55 @@
 
 ---
 
+## 8 Oktober 2026 — 🔥 KEBAKARAN HUTAN TIDAK BISA DIHIDUPKAN (SUDAH DIPERBAIKI)
+
+Bapak melaporkan: kategori **Kebakaran Hutan tidak bisa dihidupkan**.
+
+### Sebabnya
+
+Bukan kunci, bukan internet Bapak, bukan pula kode yang salah tulis. Sebabnya:
+**NASA belum menerbitkan citra titik api untuk hari ini.**
+
+Yang menjebak: NASA **tetap menjawab "berhasil" (kode 200)**, tetapi isinya
+**bukan gambar** — melainkan **surat galat** berbahasa komputer
+(*"Failed to draw layer … Thermal_Anomalies"*). Aplikasi lama hanya memeriksa
+"jawabannya berhasil atau tidak", jadi surat galat itu dianggap gambar → gagal
+dibaca → kategori mati dengan pesan *"data kosong"* yang menyesatkan.
+
+Diperiksa dengan `curl` (bukan tebakan):
+
+| Tanggal citra | Jawaban NASA | Isinya |
+|---------------|--------------|--------|
+| Hari ini (8 Okt) | 200 (kelihatan "berhasil") | ❌ **surat galat** (451 byte) |
+| Kemarin (7 Okt) | 200 | ✅ gambar sungguhan (30.448 byte) |
+| 2 hari lalu | 200 | ✅ gambar sungguhan |
+| tanpa tanggal | 200 | ✅ gambar sungguhan |
+
+### Yang diperbaiki
+
+1. **Isi jawaban diperiksa, bukan hanya kodenya** — surat galat tidak lagi
+   dianggap gambar.
+2. **Urutan tanggal dibalik** — **kemarin** dicoba lebih dulu, **hari ini paling
+   akhir** (sebab citra hari ini sering belum terbit). Tanggal yang berhasil
+   diingat, jadi pengambilan berikutnya tidak mengulang dari awal.
+3. **Gangguan sementara tidak lagi mematikan kategori** — kategori tetap
+   menyala dan menulis sebabnya dengan bahasa biasa:
+   *"NASA belum menerbitkan citra titik api terbaru — dicoba lagi nanti"*.
+
+### Hasil uji
+
+| Diuji | Hasil |
+|-------|-------|
+| Kategori dinyalakan | ✅ **9.430 titik api terlihat** (citra 7 Okt 2026) |
+| Galat di konsol | ✅ **0** |
+| Klik satu titik api | ✅ kartu tampil lengkap (luas, sumber, tanggal citra, koordinat) |
+| Keadaan "citra belum terbit" (sengaja dibuat) | ✅ kategori **tetap menyala** + pesan jelas · **0 galat** |
+| Sisa uji di peramban | ✅ dibersihkan |
+
+Sudah dipasang ke halaman hidup: **https://suwandhih.github.io/petadunia/**
+
+---
+
 ## 8 Oktober 2026 — 📱 HP ANDROID & KEPUTUSAN MEMASANG LEWAT GITHUB
 
 Bapak menanyakan: **apakah aplikasi ini bisa jalan di Chrome Android?** Lalu

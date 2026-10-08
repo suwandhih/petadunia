@@ -136,6 +136,11 @@ Catatan tiap kategori:
   ≤24 jam; warna menurut magnitudo & umur; gempa M≥5,5 diberi label.
 - **Kebakaran** — titik api dibaca dari **piksel citra satelit** GIBS; titik yang
   menumpuk digabung saat zoom jauh; kekuatan api (FRP) menentukan ukuran & warna.
+  ⚠️ **Citra hari ini sering belum terbit** — GIBS menjawab `200` berisi **XML
+  galat**, bukan gambar. Karena itu **jenis isi wajib diperiksa** dan tanggal
+  dicoba **mundur** (kemarin dulu, hari ini paling akhir). Bila semua tanggal
+  gagal, kategori **tetap menyala** dan menulis *"NASA belum menerbitkan citra
+  titik api terbaru — dicoba lagi nanti"* (lihat bagian 4b butir 8–9).
 - **Gunung** — daftar gunung api dari Wikidata, erupsi terkini dari GDACS; gunung
   yang sedang erupsi memancarkan asap/abu + denyut cahaya.
 - **Angin** — kisi **16 × 12 = 192 titik ukur** (maksimum 300 per permintaan);
@@ -374,6 +379,24 @@ saat ubin gagal dimuat.
 Alat `PD.alat.lapisan()` di `app/js/lapisan/alat.js` adalah tempat semua pelajaran
 di atas sudah diselesaikan — kategori baru yang butuh lapisan ubin **wajib**
 memakainya, jangan menulis MapLibre langsung.
+
+8. **NASA GIBS bisa membalas HTTP 200 yang isinya BUKAN gambar.** Bila citra
+   yang diminta belum diterbitkan, GIBS menjawab `200` dengan
+   `content-type: application/vnd.ogc.se_xml` berisi
+   *"msDrawMap(): Image handling error. Failed to draw layer named '…'"*.
+   Memeriksa `r.ok` saja **tidak cukup** — XML itu akan dianggap gambar, gagal
+   didekode, dan kategori mati dengan pesan menyesatkan *"data kosong"*
+   (kejadian 8 Okt 2026: 🔥 Kebakaran Hutan tidak bisa dihidupkan).
+   **Perbaikan:** periksa **jenis isi** (`/^image\//i.test(r.headers.get('content-type'))`),
+   dan **coba tanggal mundur** — **kemarin lebih dulu**, hari ini paling akhir.
+   Terukur 8 Okt 2026 untuk `VIIRS_SNPP_Thermal_Anomalies_375m_All`:
+   hari ini → XML galat 451 B · kemarin → `image/png` 30.448 B · tanpa `TIME` →
+   `image/png` 30.448 B.
+9. **Kegagalan sementara tidak boleh mematikan kategori.** Melempar galat dari
+   `muat()` untuk hal sementara (citra belum terbit, HTTP 429, 500 sesaat) membuat
+   inti **mematikan kategori** dengan pesan menyesatkan. Biarkan kategori tetap
+   menyala, tulis sebabnya dengan bahasa biasa lewat `PD.setStatus()` /
+   `PD.ringkas()`, dan coba lagi pada penjadwalan berikutnya (aturan F20/I16).
 
 ---
 

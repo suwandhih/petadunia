@@ -19,6 +19,10 @@
 | K20 | e. **Terpasang & diuji hidup:** `https://suwandhih.github.io/petadunia/` | ✅ | ✅ | 8 Okt 2026 |
 | K20 | f. Cadangan versi **satu berkas** (untuk saat internet mati) — **belum dikerjakan** | ⏸️ | ⏸️ | — |
 
+> **K21 (8 Okt 2026) — Kebakaran Hutan tidak bisa dihidupkan: SUDAH SELESAI.**
+> Sebab & perbaikannya ditulis di bagian **CATATAN** di bawah, dan ringkasannya
+> ada di tabel **D. SELESAI**.
+
 > **K20-d — keputusan pemasangan (8 Okt 2026):** Bapak memilih **GitHub Pages**.
 > Sebabnya: lewat HTTPS masalah `file://` **hilang semua** — tidak perlu versi
 > "satu berkas", dan kunci AirLabs/pengaturan **tidak pernah hilang**.
@@ -129,6 +133,7 @@ sebelum menulis kode.
 | K17 f | Penerbangan (AirLabs) + kotak cari penerbangan & rute + perbaikan 2 bug tersembunyi + **uji kunci sungguhan (berhasil)** | 7 Okt 2026 |
 | K17 j | Uji PC (8 kategori serentak) + uji HP (layar sempit) | 7 Okt 2026 |
 | K19 | Awan realistis — hilangkan peta awan berpalet merah, gunakan foto satelit asli sebagai satu-satunya tampilan | 8 Okt 2026 |
+| K21 | **Kebakaran Hutan tidak bisa dihidupkan** — sebabnya NASA GIBS membalas HTTP 200 berisi **XML galat** (citra hari ini belum terbit); kini jenis isi diperiksa, tanggal dicoba mundur, dan kegagalan sementara tidak lagi mematikan kategori | 8 Okt 2026 |
 | — | **Perbaikan pasca-keluhan *"AirLabs: Unknown api_key"*** (kunci palsu sisa uji dibersihkan · validasi bentuk kunci · pesan galat jelas · tombol Hapus kunci · bug angka 0 karangan · kartu = ringkasan) | 7 Okt 2026 |
 | — | **Tombol `⋯`** pada tiap kategori (kartu pengaturan selalu bisa dibuka, termasuk di HP) | 7 Okt 2026 |
 | — | **Animasi Angin hilang diperbaiki** — sebabnya **jatah harian Open-Meteo habis** (bukan gangguan sebentar); ditambah **server cadangan** `historical-forecast-api` + catatan "habis hari ini" | 7 Okt 2026 |
@@ -140,6 +145,52 @@ sebelum menulis kode.
 
 - Order baru dari Bapak → dicatat dulu di tabel **A** atau **B** dengan tanda ⬜, **baru dikerjakan**.
 - **Dokumen tidak di-update di tengah perbaikan** — di-update **sekali** setelah sesi selesai.
+
+### K21 — Kebakaran Hutan tidak bisa dihidupkan (8 Okt 2026)
+
+**Keluhan Bapak:** kategori 🔥 Kebakaran Hutan **tidak bisa dihidupkan**.
+
+**Sebabnya (diperiksa dengan `curl`, bukan tebakan):** NASA GIBS membalas
+**HTTP 200** tetapi isinya **bukan gambar** — melainkan **XML galat**
+(`content-type: application/vnd.ogc.se_xml`, isi *"msDrawMap(): Image handling
+error. Failed to draw layer named 'VIIRS_SNPP_Thermal_Anomalies…'"*). Artinya
+**citra titik api hari ini belum diterbitkan** NASA. Kode lama hanya memeriksa
+`r.ok` (kode 200), sehingga XML itu dianggap gambar → gagal didekode → kategori
+mati dengan pesan menyesatkan *"data kosong"*.
+
+Bukti tanggal (diuji 8 Okt 2026, `curl`):
+
+| Tanggal | Kode | Jenis isi | Ukuran |
+|---------|------|-----------|--------|
+| 2026-10-08 (hari ini) | 200 | `application/vnd.ogc.se_xml` | 451 B (galat) |
+| 2026-10-07 (kemarin) | 200 | `image/png` | 30.448 B |
+| 2026-10-06 | 200 | `image/png` | 30.540 B |
+| tanpa `TIME` | 200 | `image/png` | 30.448 B |
+
+**Perbaikan (3 hal):**
+1. **Jenis isi wajib diperiksa** — jawaban hanya diterima bila `content-type`
+   berawalan `image/`. XML galat tidak lagi didekode.
+2. **Urutan tanggal dibalik** — **kemarin** dicoba lebih dulu, **hari ini paling
+   akhir** (sebab citra hari ini sering belum terbit). Tanggal yang berhasil
+   diingat supaya pengambilan berikutnya tidak mengulang dari awal.
+3. **Kegagalan sementara tidak lagi mematikan kategori** (aturan F20/I16) —
+   kategori tetap menyala dan menulis sebabnya dengan bahasa biasa:
+   *"NASA belum menerbitkan citra titik api terbaru — dicoba lagi nanti"*.
+
+**Hasil uji (halaman hidup `https://suwandhih.github.io/petadunia/app/index.html`):**
+
+| Uji | Hasil |
+|-----|-------|
+| Kategori dinyalakan (keadaan biasa) | ✅ **9.430 titik api terlihat** · citra **2026-10-07** |
+| Galat konsol | ✅ **0** |
+| Kartu titik api (klik) | ✅ tampil: luas, sumber, **tanggal citra**, koordinat |
+| Jalur "citra belum terbit" (jawaban GIBS ditahan jadi XML) | ✅ kategori **tetap menyala** + pesan jelas · **0 galat** |
+| `localStorage` sisa uji | ✅ dibersihkan (kosong) |
+
+**Berkas yang diubah:** `app/js/lapisan/kebakaran.js` (fungsi `jawabanGambar()`
+baru, urutan tanggal, `pesanCitra`) dan `app/index.html` (penanda versi
+`kebakaran.js?v=20261008-1`). Cadangan: `backups\kebakaran-citra-20261008-1254\`.
+Sudah dipasang ke cabang **`gh-pages`** (halaman hidup) dan **`main`** (sumber).
 
 ---
 

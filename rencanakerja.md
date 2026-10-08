@@ -23,6 +23,37 @@
 > Sebab & perbaikannya ditulis di bagian **CATATAN** di bawah, dan ringkasannya
 > ada di tabel **D. SELESAI**.
 
+| **K22** | **Cari lokasi** (order Bapak 8 Okt 2026) | | | |
+| K22 | a. Uji CORS sumber pencarian lebih dulu | ✅ | ✅ | 8 Okt 2026 |
+| K22 | b. Kotak cari + daftar hasil + pindah peta ke lokasi | ✅ | ✅ | 8 Okt 2026 |
+| K22 | c. Tanda 📍 di lokasi yang dicari + kartu keterangan | ✅ | ✅ | 8 Okt 2026 |
+| K22 | d. Beri tahu °C di lokasi yang dicari (bila Suhu menyala) | ✅ | ✅ | 8 Okt 2026 |
+
+| **K23** | **Suhu permukaan: angka derajat °C** (order Bapak 8 Okt 2026) | | | |
+| K23 | a. Cari skala warna resmi NASA (bukan mengarang) | ✅ | ✅ | 8 Okt 2026 |
+| K23 | b. Buktikan warna ubin sama dengan tabel resmi | ✅ | ✅ | 8 Okt 2026 |
+| K23 | c. Ubah warna jadi °C + tampilkan di kartu & ringkasan | ✅ | ✅ | 8 Okt 2026 |
+| K23 | d. Pasang pita skala (_legend_) warna ⇄ derajat | ✅ | ✅ | 8 Okt 2026 |
+| K23 | e. Uji + pasang ke halaman GitHub | ✅ | ✅ | 8 Okt 2026 |
+
+> **K22-a & K23-a/b — hasil uji sumber (8 Okt 2026, `curl`, bukan tebakan):**
+>
+> | Sumber | Guna | CORS | Hasil |
+> |--------|------|------|-------|
+> | `geocoding-api.open-meteo.com/v1/search` | cari nama tempat | ✅ `*` | 200 · ada `Kota Bandung`, negara, provinsi, tinggi |
+> | `nominatim.openstreetmap.org/search` | cadangan cari tempat | ✅ `*` | 200 (belum dipakai) |
+> | `gibs.earthdata.nasa.gov/colormaps/v1.3/MODIS_Land_Surface_Temp.xml` | **skala warna resmi suhu** | ✅ `*` | 200 · 253 tingkat · **satuan Kelvin** · nilai 200–350 K |
+> | `...legends/MODIS_Land_Surface_Temp_H.png` | gambar legenda | ✅ | 200 `image/png` (tidak dipakai, XML lebih tepat) |
+> | GIBS `GetFeatureInfo` (nilai per titik) | baca angka langsung | — | ❌ **tidak diaktifkan** NASA: *"WMS request not enabled"* |
+>
+> **Bukti warna ubin = tabel resmi (aturan I19 — diukur dari banyak ubin):**
+> palet ubin NASA **253 dari 253 indeks sama persis** dengan colormap resmi
+> (`v1.3/MODIS_Land_Surface_Temp.xml`). Disurvei 36 ubin z5 sebaris seluruh
+> dunia: ubin berisi selalu **berpalet mode P** dengan urutan palet resmi
+> (ubin tanpa data tampak kelabu mode `LA`/`RGB` — dan itu **disaring**).
+> ⚠️ Legenda **PNG** ternyata berpalet **berbeda** (0% cocok) — jadi **XML
+> colormap** yang dipakai, bukan PNG legenda. Ini contoh nyata aturan I10/I19.
+
 > **K20-d — keputusan pemasangan (8 Okt 2026):** Bapak memilih **GitHub Pages**.
 > Sebabnya: lewat HTTPS masalah `file://` **hilang semua** — tidak perlu versi
 > "satu berkas", dan kunci AirLabs/pengaturan **tidak pernah hilang**.

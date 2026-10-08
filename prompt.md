@@ -487,3 +487,30 @@ dikirim ke HP (css + MapLibre + 10 berkas js disatukan jadi satu `.html`).
 ⚠️ Kalau yang dikirim hanya `index.html`, css/js **tidak ikut** ⇒ tampilan rusak
 (sama seperti catatan di `tools/buat-1-berkas.js` milik ANodes). Karena itu versi
 **satu berkas** tetap diperlukan untuk cara apa pun.
+
+### 6.6 Tata letak Git & GitHub Pages (disiapkan 8 Okt 2026)
+
+```
+C:\data\Peta dunia\        ← AKAR repostori Git
+├── .git/                  ← dibuat: git init -b main
+├── .gitignore             ← backups/ · catat/ · unggah-ke-github.zip diabaikan
+├── .nojekyll              ← agar GitHub tidak memproses berkas dengan Jekyll
+├── unggah-ke-github.zip   ← berkas siap-unggah (isi commit HEAD, 22 berkas)
+├── app/                   ← APLIKASI (index.html + css/ + js/)
+├── agents.md · catatanAI.md · CHANGELOG.md · panduan.md · prompt.md ·
+│   rencanakerja.md
+├── backups/               ← ❌ tidak diunggah (104 MB) · tetap utuh di komputer
+└── catat/                 ← ❌ tidak diunggah (79 MB) · tetap utuh di komputer
+```
+
+| Butir | Keterangan |
+|-------|-----------|
+| Alamat aplikasi | `https://<nama-akun>.github.io/petadunia/app/index.html` |
+| Cara memasang | unggah `unggah-ke-github.zip` → *Add file → Upload files* (GitHub membuka ZIP sendiri) |
+| Cabang | `main` (repo kosong langsung dibuat dengan `git init -b main`) |
+| Login saat `git push` | memakai **Git Credential Manager** (sudah tersedia) → izin lewat jendela peramban |
+| Isi repo | 22 berkas: 14 aplikasi + 6 dokumen + `.gitignore` + `.nojekyll` |
+| Kunci API | **tidak ada** di dalam repo — sisa hanya contoh karangan `a1b2c3d4-…` |
+
+⚠️ **Jangan** menghapus dua baris `backups/` dan `catat/` dari `.gitignore`
+kecuali memang ingin mengunggah 183 MB arsip.

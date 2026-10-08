@@ -357,10 +357,13 @@
 
     /* Ambil data JSON dengan penanganan galat yang rapi.
          Batas waktu WAJIB: sumber yang menggantung (tidak menjawab) akan
-         mengunci kategori selamanya bila tidak dibatalkan. */
+         mengunci kategori selamanya bila tidak dibatalkan.
+         Dipecah dua: ambilBahan (satu tempat untuk batas waktu & galat) lalu
+         pengubah bentuk (json/teks/xml). Cara ini menghindari `return` di
+         dalam `try` — lihat pelajaran I8. */
       const A_BATAS_MS = 20000;
 
-      A.ambil = async function (url, opsi) {
+      async function ambilBahan(url, opsi) {
         const o = Object.assign({}, opsi || {});
         let penghitung = null;
 
@@ -371,16 +374,46 @@
           penghitung = setTimeout(function () { pengawas.abort(); }, A_BATAS_MS);
         }
 
+        let hasil = null;
+        let galat = null;
         try {
           const r = await fetch(url, o);
-          if (!r.ok) throw new Error('HTTP ' + r.status + ' ' + url);
-          return await r.json();
+          if (!r.ok) {
+            galat = new Error('HTTP ' + r.status + ' ' + url);
+          } else {
+            hasil = r;
+          }
         } catch (e) {
-          throw new Error(String(e && e.name === 'AbortError'
+          galat = new Error(String(e && e.name === 'AbortError'
             ? 'HTTP 408 batas waktu (' + A_BATAS_MS + ' ms) ' + url
             : e));
         } finally {
           if (penghitung) clearTimeout(penghitung);
         }
+
+        if (galat) throw galat;
+        return hasil;
+      }
+
+      A.ambil = async function (url, opsi) {
+        const r = await ambilBahan(url, opsi);
+        return r.json();
+      };
+
+      /* Khusus berkas XML resmi (mis. tabel warna NASA). Diperiksa lebih
+         dulu bahwa isinya memang XML, bukan halaman galat — pelajaran dari
+         🐛 Kebakaran (NASA menjawab 200 tetapi isinya bukan data). */
+      A.ambilXml = async function (url, opsi) {
+        const r = await ambilBahan(url, opsi);
+        const jenis = r.headers.get('content-type') || '';
+        if (!/xml/i.test(jenis)) {
+          throw new Error('jawaban bukan XML: ' + (jenis || 'jenis tidak diketahui'));
+        }
+        const teks = await r.text();
+        const dok = new DOMParser().parseFromString(teks, 'text/xml');
+        if (dok.getElementsByTagName('parsererror').length) {
+          throw new Error('XML tidak bisa dibaca dari ' + url);
+        }
+        return dok;
       };
     })();

@@ -44,7 +44,7 @@ body{
   box-shadow:0 0 8px var(--hijau);animation:denyut 2s infinite;
 }
 @keyframes denyut{0%,100%{opacity:1}50%{opacity:.35}}
-.kanan{display:flex;align-items:center;gap:6px}
+.kanan{display:flex;align-items:center;gap:6px;min-width:0}
 .jam{font-variant-numeric:tabular-nums;color:var(--teks-redup);font-size:12px;margin-right:4px}
 
 .tombol-kecil{
@@ -191,6 +191,60 @@ body{
   text-shadow:0 1px 3px #000;
 }
 
+/* ---------- kotak cari lokasi ---------- */
+#cari-lokasi{position:relative;flex:0 1 auto;min-width:0}
+#cari-kotak{
+  width:190px;min-width:0;max-width:100%;padding:5px 9px;
+  background:rgba(9,13,19,.8);color:var(--teks);
+  border:1px solid var(--garis-terang);border-radius:6px;
+  font-family:inherit;font-size:12px;
+}
+#cari-kotak::placeholder{color:var(--teks-redup)}
+#cari-kotak:focus{outline:none;border-color:var(--aksen);background:rgba(9,13,19,.95)}
+#cari-kotak::-webkit-search-cancel-button{cursor:pointer}
+#cari-daftar{
+  position:absolute;top:calc(100% + 6px);right:0;width:280px;max-height:290px;
+  overflow-y:auto;z-index:30;
+  background:var(--panel-padat);border:1px solid var(--garis-terang);
+  border-radius:8px;box-shadow:0 12px 34px rgba(0,0,0,.65);
+}
+.cari-hasil{
+  display:block;width:100%;text-align:left;
+  background:none;border:none;border-bottom:1px solid var(--garis);
+  color:var(--teks);font-family:inherit;font-size:12px;
+  padding:7px 10px;cursor:pointer;
+}
+.cari-hasil:last-child{border-bottom:none}
+.cari-hasil:hover{background:rgba(56,189,248,.14)}
+.cari-hasil b{display:block;font-weight:600}
+.cari-hasil small{color:var(--teks-redup);font-size:10.5px}
+.cari-kosong{padding:9px 10px;font-size:11.5px;color:var(--teks-redup)}
+
+/* ---------- pita skala (legend) ---------- */
+#pita-skala{
+  position:fixed;left:calc(var(--lebar-panel) + 10px);bottom:10px;z-index:12;
+  background:rgba(13,19,27,.86);border:1px solid var(--garis);
+  border-radius:8px;padding:7px 9px 5px;
+  backdrop-filter:blur(6px);
+}
+#pita-skala.sembunyi{display:none}
+.pita-judul{font-size:10px;color:var(--teks-redup);margin-bottom:5px}
+.pita-jalur{
+  position:relative;height:11px;border-radius:3px;
+  background:linear-gradient(90deg,
+    #c900ff 0%, #0011ff 15%, #0082f1 30%, #0ef1d1 40%,
+    #64f108 50%, #a5f100 57%, #eaf100 65%, #f18900 80%, #ff0100 100%);
+}
+.pita-tanda{
+  position:absolute;top:-2px;width:2px;height:15px;
+  background:#fff;box-shadow:0 0 5px rgba(0,0,0,.9);
+}
+.pita-angka{
+  display:flex;justify-content:space-between;
+  font-size:9.5px;color:var(--teks-redup);margin-top:3px;
+}
+.pita-catatan{font-size:9.5px;color:var(--teks-redup);margin-top:2px}
+
 /* ---------- maplibre ---------- */
 .maplibregl-ctrl-attrib{font-size:10px}
 .maplibregl-popup-content{
@@ -211,4 +265,9 @@ body{
   #panel-info{right:8px;left:8px;width:auto;top:52px}
   .merek .kecil{display:none}
   .jam{display:none}
+  #cari-lokasi{flex:1 1 auto}
+  #cari-kotak{width:100%;font-size:11px}
+  /* Di HP, daftar hasil dipaku ke tepi layar supaya TIDAK pernah terpotong. */
+  #cari-daftar{position:fixed;left:8px;right:8px;top:48px;width:auto}
+  #pita-skala{left:8px;right:8px;bottom:8px}
 }

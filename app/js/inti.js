@@ -221,7 +221,7 @@
       const L = PD.lapisan.get(k);
       if (r && L) aktif.push({ L: L, r: r });
     }
-    if (!aktif.length) {
+    if (!aktif.length && !ringkasan.has('cari')) {
       el.dataset.ringkas = '';
       el.textContent = 'siap — pilih kategori';
       el.classList.remove('ingat');
@@ -236,6 +236,14 @@
       if (a.r.tambahan) {
         h += '<div class="baris-ringkas peringatan">' + aman(a.r.tambahan) + '</div>';
       }
+    }
+    /* Lokasi yang dicari ditaruh paling atas — tidak terikat kategori mana pun. */
+    const rc = ringkasan.get('cari');
+    if (rc) {
+      h = '<div class="baris-ringkas">' +
+        '<span class="titik-ringkas ' + (rc.warna || '') + '"></span>' +
+        '<span><b>' + aman(rc.teks) + '</b>' +
+        (rc.tambahan ? ' — ' + aman(rc.tambahan) : '') + '</span></div>' + h;
     }
     el.dataset.ringkas = '1';
     el.classList.add('ingat');
@@ -388,6 +396,12 @@
     const ctx = PD.kanvas.ctx;
     ctx.clearRect(0, 0, innerWidth, innerHeight);
 
+    /* tanda 📍 lokasi yang dicari — digambar paling bawah supaya tidak
+       menutupi data kategori */
+    if (PD.cari && PD.cari.gambar) {
+      try { PD.cari.gambar(ctx, dt, waktu); } catch (e) { /* lewati */ }
+    }
+
     for (const id of PD.aktif) {
       const L = PD.lapisan.get(id);
       if (L && L.gambar) {
@@ -454,6 +468,7 @@
     pasangTombol();
     pasangKlik();
     gambarKategori();
+    if (PD.cari && PD.cari.pasang) PD.cari.pasang();
     requestAnimationFrame(putar);
   }
 

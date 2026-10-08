@@ -21,9 +21,21 @@
   let tanggalPakai = null;
   let terakhirAmbil = 0;
   let sedangAmbil = false;
+  /* Alasan jujur saat tidak ada titik api yang bisa ditampilkan. */
+  let pesanCitra = '';
 
   function tanggalUji(mundur) {
     return new Date(Date.now() - mundur * 86400000).toISOString().slice(0, 10);
+  }
+
+  /* NASA GIBS kadang membalas HTTP 200 tetapi isinya BUKAN gambar, melainkan
+     XML galat — mis. "Failed to draw layer ... Thermal_Anomalies", biasanya
+     karena citra HARI INI belum diterbitkan. Tanpa pemeriksaan ini, XML itu
+     dianggap gambar, gagal didekode, dan kategori mati dengan pesan yang tidak
+     jelas (kejadian 8 Okt 2026: 🔥 Kebakaran tidak bisa dihidupkan).
+     Jadi selain kode 200, jenis isinya WAJIB diperiksa. */
+  function jawabanGambar(r) {
+    return r.ok && /^image\//i.test(r.headers.get('content-type') || '');
   }
 
   /* ---------- ambil gambar titik api untuk wilayah yang terlihat ---------- */
@@ -44,10 +56,19 @@
     tinggi = Math.max(128, Math.min(2048, tinggi));
 
     const bbox = barat + ',' + selatan + ',' + timur + ',' + utara;
-    const pilihan = tanggalPakai ? [tanggalPakai] : [0, 1, 2, 3];
+    /* Urutan percobaan: kalau sudah tahu tanggal yang berhasil, pakai itu lebih
+       dulu; kalau belum, mulai dari KEMARIN sampai 4 hari ke belakang. Hari ini
+       diletakkan paling akhir sebab citranya sering belum terbit. */
+    const berhasil = [];
+    if (tanggalPakai) berhasil.push(tanggalPakai);
+    for (let d = 1; d <= 4; d++) {
+      const t = tanggalUji(d);
+      if (berhasil.indexOf(t) === -1) berhasil.push(t);
+    }
+    if (!tanggalPakai) berhasil.push(tanggalUji(0));
 
-    for (const m of pilihan) {
-      const tgl = typeof m === 'string' ? m : tanggalUji(m);
+    let adaJawabanGambar = false;
+    for (const tgl of berhasil) {
       const url = GIBS +
         '?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap' +
         '&LAYERS=' + LAPIS + '&STYLES=&SRS=EPSG:4326' +
@@ -56,19 +77,38 @@
         '&BBOX=' + bbox +
         '&WIDTH=' + lebar + '&HEIGHT=' + tinggi;
 
-      const r = await fetch(url);
-      if (!r.ok) continue;
-      const bmp = await createImageBitmap(await r.blob());
-      const hasil = bacaPiksel(bmp, barat, selatan, timur, utara);
+      let r;
+      try {
+        r = await fetch(url);
+      } catch (e) {
+        continue;
+      }
+      /* Bukan gambar (mis. XML galat dari NASA) → jangan didekode. */
+      if (!jawabanGambar(r)) continue;
+      adaJawabanGambar = true;
+
+      let hasil;
+      try {
+        const bmp = await createImageBitmap(await r.blob());
+        hasil = bacaPiksel(bmp, barat, selatan, timur, utara);
+      } catch (e) {
+        /* Gambar rusak/terpotong → coba tanggal berikutnya. */
+        continue;
+      }
       if (hasil.length) {
         tanggalPakai = tgl;
         titik = hasil;
         terakhirAmbil = Date.now();
+        pesanCitra = '';
         return;
       }
     }
+
     titik = [];
     terakhirAmbil = Date.now();
+    pesanCitra = adaJawabanGambar
+      ? ''
+      : 'NASA belum menerbitkan citra titik api terbaru — dicoba lagi nanti';
   }
 
   /* ---------- ubah piksel merah menjadi titik koordinat ---------- */
@@ -221,6 +261,7 @@
 
     const bagian = [PD.angka(tampak, 0) + ' titik api terlihat'];
     if (besarKali) bagian.push(besarKali + ' kebakaran besar bernama');
+    if (!tampak && !besarKali && pesanCitra) bagian.push(pesanCitra);
     PD.ringkas(
       'kebakaran',
       bagian.join(' · '),
@@ -263,12 +304,19 @@
         besar = [];
       }
 
-      if (!titik.length && !besar.length) throw new Error('data kebakaran kosong');
+      if (!titik.length && !besar.length && pesanCitra) {
+        /* Kegagalan SEMENTARA (citra NASA belum terbit) TIDAK boleh
+           menggagalkan kategori — biarkan tetap menyala dan katakan sebabnya
+           dengan bahasa biasa (aturan F20/I16). Melempar galat di sini membuat
+           inti mematikan kategori dengan pesan menyesatkan. */
+        PD.setStatus('kebakaran: ' + pesanCitra);
+      }
     },
 
     segarkan: async function () {
       try {
         await ambilTitikApi();
+        if (pesanCitra) PD.setStatus('kebakaran: ' + pesanCitra);
       } catch (e) {
         PD.setStatus('kebakaran: gagal menyegarkan');
       }
